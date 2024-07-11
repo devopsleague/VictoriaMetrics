@@ -15,76 +15,44 @@
   <img src="docs/logo.webp" width="300" alt="VictoriaMetrics logo">
 </picture>
 
-VictoriaMetrics is a fast, cost-effective and scalable monitoring solution and time series database.
-See [case studies for VictoriaMetrics](https://docs.victoriametrics.com/casestudies/).
+VictoriaMetrics is a fast, cost-saving, and scalable solution for monitoring and managing time series data. It delivers high performance and reliability, making it an ideal choice for businesses of all sizes.
 
-VictoriaMetrics is available in [binary releases](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/latest),
-[Docker images](https://hub.docker.com/r/victoriametrics/victoria-metrics/) and [source code](https://github.com/VictoriaMetrics/VictoriaMetrics). 
+Here are some resources and information about VictoriaMetrics:
 
-Documentation for the cluster version of VictoriaMetrics is available [here](https://docs.victoriametrics.com/cluster-victoriametrics/).
+- Case studies: [Grammarly, Roblox, Wix,...](https://docs.victoriametrics.com/casestudies/).
+- Available: [Binary releases](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/latest), [Docker images](https://hub.docker.com/r/victoriametrics/victoria-metrics/), [Source code](https://github.com/VictoriaMetrics/VictoriaMetrics)
+- Documentation: [Key concepts](https://docs.victoriametrics.com/keyconcepts/), [Quick-start guide](https://docs.victoriametrics.com/quick-start/)
+- Deployment types: [Single-node version](https://docs.victoriametrics.com/), [Cluster version](https://docs.victoriametrics.com/cluster-victoriametrics/), and [Enterprise version](https://docs.victoriametrics.com/enterprise/)
+- Changelog: [CHANGELOG](https://docs.victoriametrics.com/changelog/), and [How to upgrade](#how-to-upgrade-victoriametrics)
+- Community: [Slack](https://slack.victoriametrics.com/), [Twitter](https://twitter.com/VictoriaMetrics), [LinkedIn](https://www.linkedin.com/company/victoriametrics/), [YouTube](https://www.youtube.com/@VictoriaMetrics)
 
-Learn more about [key concepts](https://docs.victoriametrics.com/keyconcepts/) of VictoriaMetrics and follow the 
-[quick start guide](https://docs.victoriametrics.com/quick-start/) for a better experience.
+VictoriaMetrics offers an Enterprise version with additional features, such as:
 
-If you have questions about VictoriaMetrics, then feel free asking them in the [VictoriaMetrics community Slack chat](https://victoriametrics.slack.com/),
-you can join it via [Slack Inviter](https://slack.victoriametrics.com/).
+- **Anomaly detection**: Automation and simplification of your alerting rules, covering complex anomalies found in metrics data.
+- **Backup automation**: Automates regular backup procedures.
+- **Multiple retentions**: Reducing storage costs by specifying different retentions for different datasets.
+- **Downsampling**: Reducing storage costs and increasing performance for queries over historical data.
+- **Stable releases** with long-term support lines ([LTS](https://docs.victoriametrics.com/lts-releases/)).
+- Many other features you can read at [the Enterprise page](https://docs.victoriametrics.com/enterprise/).
 
-[Contact us](mailto:info@victoriametrics.com) if you need enterprise support for VictoriaMetrics.
-See [features available in enterprise package](https://docs.victoriametrics.com/enterprise/).
-Enterprise binaries can be downloaded and evaluated for free
-from [the releases page](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/latest).
-You can also [request a free trial license](https://victoriametrics.com/products/enterprise/trial/).
+[Contact us](mailto:info@victoriametrics.com) if you need enterprise support for VictoriaMetrics. Or you can request a free trial license [here](https://victoriametrics.com/products/enterprise/trial/), downloaded Enterprise binaries are available at [Github Releases](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/latest).
 
-VictoriaMetrics is developed at a fast pace, so it is recommended to check the [CHANGELOG](https://docs.victoriametrics.com/changelog/) periodically,
-and to perform [regular upgrades](#how-to-upgrade-victoriametrics).
-
-[VictoriaMetrics enterprise](https://docs.victoriametrics.com/enterprise/) provides long-term support lines of releases (LTS releases) -
-see [these docs](https://docs.victoriametrics.com/lts-releases/).
-
-VictoriaMetrics has achieved security certifications for Database Software Development and Software-Based Monitoring Services.
-We apply strict security measures in everything we do. See [Security page](https://victoriametrics.com/security/) for more details.
+<!-- VictoriaMetrics has achieved security certifications for Database Software Development and Software-Based Monitoring Services.
+We apply strict security measures in everything we do. See [Security page](https://victoriametrics.com/security/) for more details. -->
 
 ## Prominent features
 
-VictoriaMetrics has the following prominent features:
+VictoriaMetrics is optimized for timeseries data, even when old time series are constantly replaced by new ones at a high rate, it offers a lot of features:
 
-* It can be used as long-term storage for Prometheus. See [these docs](#prometheus-setup) for details.
-* It can be used as a drop-in replacement for Prometheus in Grafana, because it supports the [Prometheus querying API](#prometheus-querying-api-usage).
-* It can be used as a drop-in replacement for Graphite in Grafana, because it supports the [Graphite API](#graphite-api-usage).
-  VictoriaMetrics allows reducing infrastructure costs by more than 10x comparing to Graphite - see [this case study](https://docs.victoriametrics.com/casestudies/#grammarly).
-* It is easy to setup and operate:
-  * VictoriaMetrics consists of a single [small executable](https://medium.com/@valyala/stripping-dependency-bloat-in-victoriametrics-docker-image-983fb5912b0d)
-    without external dependencies.
-  * All the configuration is done via explicit command-line flags with reasonable defaults.
-  * All the data is stored in a single directory specified by the `-storageDataPath` command-line flag.
-  * Easy and fast backups from [instant snapshots](https://medium.com/@valyala/how-victoriametrics-makes-instant-snapshots-for-multi-terabyte-time-series-data-e1f3fb0e0282)
-    can be done with [vmbackup](https://docs.victoriametrics.com/vmbackup/) / [vmrestore](https://docs.victoriametrics.com/vmrestore/) tools.
-    See [this article](https://medium.com/@valyala/speeding-up-backups-for-big-time-series-databases-533c1a927883) for more details.
-* It implements a PromQL-like query language - [MetricsQL](https://docs.victoriametrics.com/metricsql/), which provides improved functionality on top of PromQL.
-* It provides a global query view. Multiple Prometheus instances or any other data sources may ingest data into VictoriaMetrics. Later this data may be queried via a single query.
-* It provides high performance and good vertical and horizontal scalability for both
-  [data ingestion](https://medium.com/@valyala/high-cardinality-tsdb-benchmarks-victoriametrics-vs-timescaledb-vs-influxdb-13e6ee64dd6b)
-  and [data querying](https://medium.com/@valyala/when-size-matters-benchmarking-victoriametrics-vs-timescale-and-influxdb-6035811952d4).
-  It [outperforms InfluxDB and TimescaleDB by up to 20x](https://medium.com/@valyala/measuring-vertical-scalability-for-time-series-databases-in-google-cloud-92550d78d8ae).
-* It [uses 10x less RAM than InfluxDB](https://medium.com/@valyala/insert-benchmarks-with-inch-influxdb-vs-victoriametrics-e31a41ae2893)
-  and [up to 7x less RAM than Prometheus, Thanos or Cortex](https://valyala.medium.com/prometheus-vs-victoriametrics-benchmark-on-node-exporter-metrics-4ca29c75590f)
-  when dealing with millions of unique time series (aka [high cardinality](https://docs.victoriametrics.com/faq/#what-is-high-cardinality)).
-* It is optimized for time series with [high churn rate](https://docs.victoriametrics.com/faq/#what-is-high-churn-rate).
-* It provides high data compression: up to 70x more data points may be stored into limited storage compared with TimescaleDB
-  according to [these benchmarks](https://medium.com/@valyala/when-size-matters-benchmarking-victoriametrics-vs-timescale-and-influxdb-6035811952d4),
-  and up to 7x less storage space is required compared to Prometheus, Thanos or Cortex.
-  according to [this benchmark](https://valyala.medium.com/prometheus-vs-victoriametrics-benchmark-on-node-exporter-metrics-4ca29c75590f).
-* It is optimized for storage with high-latency IO and low IOPS (HDD and network storage in AWS, Google Cloud, Microsoft Azure, etc).
-  See [disk IO graphs from these benchmarks](https://medium.com/@valyala/high-cardinality-tsdb-benchmarks-victoriametrics-vs-timescaledb-vs-influxdb-13e6ee64dd6b).
-* A single-node VictoriaMetrics may substitute moderately sized clusters built with competing solutions such as Thanos, M3DB, Cortex, InfluxDB or TimescaleDB.
-  See [vertical scalability benchmarks](https://medium.com/@valyala/measuring-vertical-scalability-for-time-series-databases-in-google-cloud-92550d78d8ae),
-  [comparing Thanos to VictoriaMetrics cluster](https://medium.com/@valyala/comparing-thanos-to-victoriametrics-cluster-b193bea1683)
-  and [Remote Write Storage Wars](https://promcon.io/2019-munich/talks/remote-write-storage-wars/) talk
-  from [PromCon 2019](https://promcon.io/2019-munich/talks/remote-write-storage-wars/).
-* It protects the storage from data corruption on unclean shutdown (i.e. OOM, hardware reset or `kill -9`) thanks to
-  [the storage architecture](https://medium.com/@valyala/how-victoriametrics-makes-instant-snapshots-for-multi-terabyte-time-series-data-e1f3fb0e0282).
-* It supports metrics scraping, ingestion and [backfilling](#backfilling) via the following protocols:
-  * [Metrics scraping from Prometheus exporters](#how-to-scrape-prometheus-exporters-such-as-node-exporter).
+* **Long-term storage for Prometheus** or as a drop-in replacement for Prometheus and Graphite in Grafana.
+* Powerful stream aggregation: Can be used as a StatsD alternative.
+* **Ideal for big data**: Works well with large amounts of time series data from APM, Kubernetes, IoT sensors, connected cars, industrial telemetry, financial data and various [Enterprise workloads](https://docs.victoriametrics.com/enterprise/). 
+* **Query language**: Supports both PromQL and the more performant MetricsQL.
+* **Easy to setup**: No dependencies, single small binary[^a-small-binary], configuration through command-line flags, but the default is also fine-tuned; backup and restore with instant snapshots[^a-isnapshot].
+* **Global query view**: Multiple Prometheus instances or any other data sources may ingest data into VictoriaMetrics and queried via a single query.
+* **Handle corruption**: Protects the storage from data corruption on unclean shutdown (i.e. OOM, hardware reset, `kill -9`)[^a-isnapshot].
+* **Various Protocols**: Support metric scraping, ingestion and backfilling in various protocol.
+  * [From Prometheus exporters](#how-to-scrape-prometheus-exporters-such-as-node-exporter).
   * [Prometheus remote write API](#prometheus-setup).
   * [Prometheus exposition format](#how-to-import-data-in-prometheus-exposition-format).
   * [InfluxDB line protocol](#how-to-send-data-from-influxdb-compatible-agents-such-as-telegraf) over HTTP, TCP and UDP.
@@ -97,17 +65,29 @@ VictoriaMetrics has the following prominent features:
   * [DataDog agent or DogStatsD](#how-to-send-data-from-datadog-agent).
   * [NewRelic infrastructure agent](#how-to-send-data-from-newrelic-agent).
   * [OpenTelemetry metrics format](#sending-data-via-opentelemetry).
-* It supports powerful [stream aggregation](https://docs.victoriametrics.com/stream-aggregation/), which can be used as a [statsd](https://github.com/statsd/statsd) alternative.
-* It supports metrics [relabeling](#relabeling).
-* It can deal with [high cardinality issues](https://docs.victoriametrics.com/faq/#what-is-high-cardinality) and
-  [high churn rate](https://docs.victoriametrics.com/faq/#what-is-high-churn-rate) issues via [series limiter](#cardinality-limiter).
-* It ideally works with big amounts of time series data from APM, Kubernetes, IoT sensors, connected cars, industrial telemetry, financial data
-  and various [Enterprise workloads](https://docs.victoriametrics.com/enterprise/).
-* It has an open source [cluster version](https://github.com/VictoriaMetrics/VictoriaMetrics/tree/cluster).
-* It can store data on [NFS-based storages](https://en.wikipedia.org/wiki/Network_File_System) such as [Amazon EFS](https://aws.amazon.com/efs/)
-  and [Google Filestore](https://cloud.google.com/filestore).
+* **NFS-based storages**: Supports storing data on NFS-based storages such as Amazon EFS, Google Filestore.
+* And many other features such as metrics relabeling, cardinality limiter, etc.
 
-See [case studies for VictoriaMetrics](https://docs.victoriametrics.com/casestudies/) and [various Articles about VictoriaMetrics](https://docs.victoriametrics.com/articles/).
+Some good benchmarks VictoriaMetrics achieved:
+
+* **High cardinality**: handling millions of unique timeseries with 10x less RAM than InfluxDB[^a-insert-benchmark], up to 7x less RAM than Prometheus, Thanos or Cortex[^a-vm-prom].
+* **Highly scalable and performance** for data ingestion[^a-high-cardinality] and querying[^a-size-matter]: 20x outperforms InfluxDB and TimescaleDB[^a-insert-benchmark].
+* **High data compression**: 70x more data points may be stored into limited storage than TimescaleDB[^a-size-matter], 7x less storage space is required than Prometheus[^a-vm-prom], Thanos or Cortex.
+* **Reducing storage costs**: More than 10x than Graphite in [Grammarly case study](https://docs.victoriametrics.com/casestudies/#grammarly).
+* **A single-node VictoriaMetrics** can replace medium-sized clusters built with competing solutions such as Thanos[^a-with-thanos], M3DB, Cortex, InfluxDB or TimescaleDB.[^a-gcloud-vertical][^a-rw-storage-wars]
+* **Optimized for storage**: Works well with high-latency IO and low IOPS (HDD and network storage in AWS, Google Cloud, Microsoft Azure, etc.)[^a-high-cardinality].
+
+Yes, we open-source both the single-node VictoriaMetrics and the cluster version.
+
+[^a-small-binary]: [Stripping dependency bloat in VictoriaMetrics Docker image](https://medium.com/@valyala/stripping-dependency-bloat-in-victoriametrics-docker-image-983fb5912b0d)
+[^a-insert-benchmark]: [Insert benchmarks with inch: InfluxDB vs VictoriaMetrics](https://medium.com/@valyala/insert-benchmarks-with-inch-influxdb-vs-victoriametrics-e31a41ae2893)
+[^a-vm-prom]: [Prometheus vs VictoriaMetrics benchmark on node_exporter metrics](https://valyala.medium.com/prometheus-vs-victoriametrics-benchmark-on-node-exporter-metrics-4ca29c75590f)
+[^a-size-matter]: [When size matters: benchmarking VictoriaMetrics vs Timescale, InfluxDB](https://medium.com/@valyala/when-size-matters-benchmarking-victoriametrics-vs-timescale-and-influxdb-6035811952d4)
+[^a-isnapshot]: [How VictoriaMetrics makes instant snapshots for multi-terabyte time series data](https://medium.com/@valyala/how-victoriametrics-makes-instant-snapshots-for-multi-terabyte-time-series-data-e1f3fb0e0282)
+[^a-high-cardinality]: [High cardinality TDB benchmarks: VictoriaMetrics vs TimescaleDB vs InfluxDB](https://medium.com/@valyala/high-cardinality-tsdb-benchmarks-victoriametrics-vs-timescaledb-vs-influxdb-13e6ee64dd6b)
+[^a-with-thanos]: [Comparing Thanos to VictoriaMetrics cluster](https://medium.com/@valyala/comparing-thanos-to-victoriametrics-cluster-b193bea1683)
+[^a-rw-storage-wars]: [Remote Write Storage Wars - PromCon 2019](https://promcon.io/2019-munich/talks/remote-write-storage-wars/)
+[^a-gcloud-vertical]: [Measuring vertical scalability for time series databases in Google Cloud](https://medium.com/@valyala/measuring-vertical-scalability-for-time-series-databases-in-google-cloud-92550d78d8ae)
 
 ## Components
 
