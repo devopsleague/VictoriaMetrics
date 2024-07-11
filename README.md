@@ -26,14 +26,15 @@ Here are some resources and information about VictoriaMetrics:
 - Changelog: [CHANGELOG](https://docs.victoriametrics.com/changelog/), and [How to upgrade](#how-to-upgrade-victoriametrics)
 - Community: [Slack](https://slack.victoriametrics.com/), [Twitter](https://twitter.com/VictoriaMetrics), [LinkedIn](https://www.linkedin.com/company/victoriametrics/), [YouTube](https://www.youtube.com/@VictoriaMetrics)
 
-VictoriaMetrics offers an Enterprise version with additional features, such as:
+VictoriaMetrics offers open-source community versions. In addition, the Enterprise version includes extra features:
 
 - **Anomaly detection**: Automation and simplification of your alerting rules, covering complex anomalies found in metrics data.
 - **Backup automation**: Automates regular backup procedures.
 - **Multiple retentions**: Reducing storage costs by specifying different retentions for different datasets.
 - **Downsampling**: Reducing storage costs and increasing performance for queries over historical data.
 - **Stable releases** with long-term support lines ([LTS](https://docs.victoriametrics.com/lts-releases/)).
-- Many other features you can read at [the Enterprise page](https://docs.victoriametrics.com/enterprise/).
+- **Comprehensive support**: First-class consulting, feature requests and technical support provided by the core VictoriaMetrics dev team.
+- Many others you can read at [the Enterprise page](https://docs.victoriametrics.com/enterprise/).
 
 [Contact us](mailto:info@victoriametrics.com) if you need enterprise support for VictoriaMetrics. Or you can request a free trial license [here](https://victoriametrics.com/products/enterprise/trial/), downloaded Enterprise binaries are available at [Github Releases](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/latest).
 
