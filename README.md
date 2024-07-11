@@ -37,8 +37,7 @@ VictoriaMetrics offers an Enterprise version with additional features, such as:
 
 [Contact us](mailto:info@victoriametrics.com) if you need enterprise support for VictoriaMetrics. Or you can request a free trial license [here](https://victoriametrics.com/products/enterprise/trial/), downloaded Enterprise binaries are available at [Github Releases](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/latest).
 
-VictoriaMetrics has achieved security certifications for Database Software Development and Software-Based Monitoring Services.
-We apply strict security measures in everything we do. See [Security page](https://victoriametrics.com/security/) for more details. 
+We strictly apply security measures in everything we do. VictoriaMetrics has achieved security certifications for Database Software Development and Software-Based Monitoring Services. See [Security page](https://victoriametrics.com/security/) for more details.
 
 ## Prominent features
 
