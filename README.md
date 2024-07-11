@@ -45,12 +45,12 @@ We strictly apply security measures in everything we do. VictoriaMetrics has ach
 VictoriaMetrics is optimized for timeseries data, even when old time series are constantly replaced by new ones at a high rate, it offers a lot of features:
 
 * **Long-term storage for Prometheus** or as a drop-in replacement for Prometheus and Graphite in Grafana.
-* Powerful stream aggregation: Can be used as a StatsD alternative.
+* **Powerful stream aggregation**: Can be used as a StatsD alternative.
 * **Ideal for big data**: Works well with large amounts of time series data from APM, Kubernetes, IoT sensors, connected cars, industrial telemetry, financial data and various [Enterprise workloads](https://docs.victoriametrics.com/enterprise/). 
 * **Query language**: Supports both PromQL and the more performant MetricsQL.
-* **Easy to setup**: No dependencies, single small binary[^a-small-binary], configuration through command-line flags, but the default is also fine-tuned; backup and restore with instant snapshots[^a-isnapshot].
+* **Easy to setup**: No dependencies, single small binary<sup>[[!]](https://medium.com/@valyala/stripping-dependency-bloat-in-victoriametrics-docker-image-983fb5912b0d)</sup>, configuration through command-line flags, but the default is also fine-tuned; backup and restore with instant snapshots<sup>[[!]](https://medium.com/@valyala/how-victoriametrics-makes-instant-snapshots-for-multi-terabyte-time-series-data-e1f3fb0e0282)</sup>.
 * **Global query view**: Multiple Prometheus instances or any other data sources may ingest data into VictoriaMetrics and queried via a single query.
-* **Handle corruption**: Protects the storage from data corruption on unclean shutdown (i.e. OOM, hardware reset, `kill -9`)[^a-isnapshot].
+* **Handle corruption**: Protects the storage from data corruption on unclean shutdown (i.e. OOM, hardware reset, `kill -9`)<sup>[[!]](https://medium.com/@valyala/how-victoriametrics-makes-instant-snapshots-for-multi-terabyte-time-series-data-e1f3fb0e0282)</sup>.
 * **Various Protocols**: Support metric scraping, ingestion and backfilling in various protocol.
   * [From Prometheus exporters](#how-to-scrape-prometheus-exporters-such-as-node-exporter).
   * [Prometheus remote write API](#prometheus-setup).
@@ -70,16 +70,16 @@ VictoriaMetrics is optimized for timeseries data, even when old time series are 
 
 Some good benchmarks VictoriaMetrics achieved:
 
-* **Minimal memory footprint**: handling millions of unique timeseries with 10x less RAM than InfluxDB[^a-insert-benchmark], up to 7x less RAM than Prometheus, Thanos or Cortex[^a-vm-prom].
-* **Highly scalable and performance** for data ingestion[^a-high-cardinality] and querying[^a-size-matter]: 20x outperforms InfluxDB and TimescaleDB[^a-insert-benchmark].
-* **High data compression**: 70x more data points may be stored into limited storage than TimescaleDB[^a-size-matter], 7x less storage space is required than Prometheus[^a-vm-prom], Thanos or Cortex.
+* **Minimal memory footprint**: handling millions of unique timeseries with 10x less RAM than InfluxDB<sup>[[!]](https://medium.com/@valyala/insert-benchmarks-with-inch-influxdb-vs-victoriametrics-e31a41ae2893)</sup>, up to 7x less RAM than Prometheus, Thanos or Cortex<sup>[[!]](https://valyala.medium.com/prometheus-vs-victoriametrics-benchmark-on-node-exporter-metrics-4ca29c75590f)</sup>.
+* **Highly scalable and performance** for data ingestion<sup>[[!]](https://medium.com/@valyala/high-cardinality-tsdb-benchmarks-victoriametrics-vs-timescaledb-vs-influxdb-13e6ee64dd6b)</sup> and querying<sup>[[!]](https://medium.com/@valyala/when-size-matters-benchmarking-victoriametrics-vs-timescale-and-influxdb-6035811952d4)</sup>, 20x outperforms InfluxDB and TimescaleDB<sup>[[!]](https://medium.com/@valyala/insert-benchmarks-with-inch-influxdb-vs-victoriametrics-e31a41ae2893)</sup>.
+* **High data compression**: 70x more data points may be stored into limited storage than TimescaleDB<sup>[[!]](https://medium.com/@valyala/when-size-matters-benchmarking-victoriametrics-vs-timescale-and-influxdb-6035811952d4)</sup>, 7x less storage space is required than Prometheus<sup>[[!]](https://valyala.medium.com/prometheus-vs-victoriametrics-benchmark-on-node-exporter-metrics-4ca29c75590f)</sup>, Thanos or Cortex.
 * **Reducing storage costs**: More than 10x than Graphite in [Grammarly case study](https://docs.victoriametrics.com/casestudies/#grammarly).
-* **A single-node VictoriaMetrics** can replace medium-sized clusters built with competing solutions such as Thanos[^a-with-thanos], M3DB, Cortex, InfluxDB or TimescaleDB.[^a-gcloud-vertical][^a-rw-storage-wars]
-* **Optimized for storage**: Works well with high-latency IO and low IOPS (HDD and network storage in AWS, Google Cloud, Microsoft Azure, etc.)[^a-high-cardinality].
+* **A single-node VictoriaMetrics** can replace medium-sized clusters built with competing solutions such as Thanos<sup>[[!]](https://medium.com/@valyala/comparing-thanos-to-victoriametrics-cluster-b193bea1683)</sup>, M3DB, Cortex, InfluxDB or TimescaleDB.<sup>[[1]](https://medium.com/@valyala/measuring-vertical-scalability-for-time-series-databases-in-google-cloud-92550d78d8ae)</sup><sup>[[2]](https://medium.com/@valyala/measuring-vertical-scalability-for-time-series-databases-in-google-cloud-92550d78d8ae)</sup>
+* **Optimized for storage**: Works well with high-latency IO and low IOPS (HDD and network storage in AWS, Google Cloud, Microsoft Azure, etc.)<sup>[[!]](https://medium.com/@valyala/high-cardinality-tsdb-benchmarks-victoriametrics-vs-timescaledb-vs-influxdb-13e6ee64dd6b)</sup>.
 
 Yes, we open-source both the single-node VictoriaMetrics and the cluster version.
 
-[^a-small-binary]: [Stripping dependency bloat in VictoriaMetrics Docker image](https://medium.com/@valyala/stripping-dependency-bloat-in-victoriametrics-docker-image-983fb5912b0d)
+<!-- [^a-small-binary]: [Stripping dependency bloat in VictoriaMetrics Docker image](https://medium.com/@valyala/stripping-dependency-bloat-in-victoriametrics-docker-image-983fb5912b0d)
 [^a-insert-benchmark]: [Insert benchmarks with inch: InfluxDB vs VictoriaMetrics](https://medium.com/@valyala/insert-benchmarks-with-inch-influxdb-vs-victoriametrics-e31a41ae2893)
 [^a-vm-prom]: [Prometheus vs VictoriaMetrics benchmark on node_exporter metrics](https://valyala.medium.com/prometheus-vs-victoriametrics-benchmark-on-node-exporter-metrics-4ca29c75590f)
 [^a-size-matter]: [When size matters: benchmarking VictoriaMetrics vs Timescale, InfluxDB](https://medium.com/@valyala/when-size-matters-benchmarking-victoriametrics-vs-timescale-and-influxdb-6035811952d4)
@@ -87,7 +87,7 @@ Yes, we open-source both the single-node VictoriaMetrics and the cluster version
 [^a-high-cardinality]: [High cardinality TDB benchmarks: VictoriaMetrics vs TimescaleDB vs InfluxDB](https://medium.com/@valyala/high-cardinality-tsdb-benchmarks-victoriametrics-vs-timescaledb-vs-influxdb-13e6ee64dd6b)
 [^a-with-thanos]: [Comparing Thanos to VictoriaMetrics cluster](https://medium.com/@valyala/comparing-thanos-to-victoriametrics-cluster-b193bea1683)
 [^a-rw-storage-wars]: [Remote Write Storage Wars - PromCon 2019](https://promcon.io/2019-munich/talks/remote-write-storage-wars/)
-[^a-gcloud-vertical]: [Measuring vertical scalability for time series databases in Google Cloud](https://medium.com/@valyala/measuring-vertical-scalability-for-time-series-databases-in-google-cloud-92550d78d8ae)
+[^a-gcloud-vertical]: [Measuring vertical scalability for time series databases in Google Cloud](https://medium.com/@valyala/measuring-vertical-scalability-for-time-series-databases-in-google-cloud-92550d78d8ae) -->
 
 ## Components
 
