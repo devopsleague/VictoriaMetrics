@@ -93,18 +93,17 @@ Yes, we open-source both the single-node VictoriaMetrics and the cluster version
 
 VictoriaMetrics ecosystem contains the following components additionally to [single-node VictoriaMetrics](https://docs.victoriametrics.com/):
 
-- [vmagent](https://docs.victoriametrics.com/vmagent/) - lightweight agent for receiving metrics via [pull-based](https://docs.victoriametrics.com/vmagent/#how-to-collect-metrics-in-prometheus-format)
-  and [push-based](https://docs.victoriametrics.com/vmagent/#how-to-push-data-to-vmagent) protocols, transforming and sending them to the configured Prometheus-compatible
-  remote storage systems such as VictoriaMetrics.
-- [vmalert](https://docs.victoriametrics.com/vmalert/) - a service for processing Prometheus-compatible alerting and recording rules.
-- [vmalert-tool](https://docs.victoriametrics.com/vmalert-tool/) -  a tool for validating alerting and recording rules.
-- [vmauth](https://docs.victoriametrics.com/vmauth/) - authorization proxy and load balancer optimized for VictoriaMetrics products.
-- [vmgateway](https://docs.victoriametrics.com/vmgateway/) - authorization proxy with per-[tenant](https://docs.victoriametrics.com/cluster-victoriametrics/#multitenancy) rate limiting capabilities.
-- [vmctl](https://docs.victoriametrics.com/vmctl/) - a tool for migrating and copying data between different storage systems for metrics.
-- [vmbackup](https://docs.victoriametrics.com/vmbackup/), [vmrestore](https://docs.victoriametrics.com/vmrestore/) and [vmbackupmanager](https://docs.victoriametrics.com/vmbackupmanager/) -
-  tools for creating backups and restoring from backups for VictoriaMetrics data.
-- `vminsert`, `vmselect` and `vmstorage` - components of [VictoriaMetrics cluster](https://docs.victoriametrics.com/cluster-victoriametrics/).
-- [VictoriaLogs](https://docs.victoriametrics.com/victorialogs/) - user-friendly cost-efficient database for logs.
+| Comoponent | Description |
+|-------------|-------------|
+| [vmagent](https://docs.victoriametrics.com/vmagent/) | Lightweight agent for receiving metrics via [pull-based](https://docs.victoriametrics.com/vmagent/#how-to-collect-metrics-in-prometheus-format) and [push-based](https://docs.victoriametrics.com/vmagent/#how-to-push-data-to-vmagent) protocols, transforming and sending them to the configured Prometheus-compatible remote storage systems such as VictoriaMetrics. |
+| [vmalert](https://docs.victoriametrics.com/vmalert/) | A service for processing Prometheus-compatible alerting and recording rules. |
+| [vmalert-tool](https://docs.victoriametrics.com/vmalert-tool/) | A tool for validating alerting and recording rules. |
+| [vmauth](https://docs.victoriametrics.com/vmauth/) | Authorization proxy and load balancer optimized for VictoriaMetrics products. |
+| [vmgateway](https://docs.victoriametrics.com/vmgateway/) | Authorization proxy with per-[tenant](https://docs.victoriametrics.com/cluster-victoriametrics/#multitenancy) rate limiting capabilities. |
+| [vmctl](https://docs.victoriametrics.com/vmctl/) | A tool for migrating and copying data between different storage systems for metrics. |
+| [vmbackup](https://docs.victoriametrics.com/vmbackup/), [vmrestore](https://docs.victoriametrics.com/vmrestore/), [vmbackupmanager](https://docs.victoriametrics.com/vmbackupmanager/) | Tools for creating backups and restoring from backups for VictoriaMetrics data. |
+| [vminsert, vmselect, vmstorage](https://docs.victoriametrics.com/cluster-victoriametrics/) | Components of VictoriaMetrics cluster. |
+| [VictoriaLogs](https://docs.victoriametrics.com/victorialogs/) | User-friendly cost-efficient database for logs. |
 
 ## Operation
 
