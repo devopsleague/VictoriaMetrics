@@ -34,7 +34,7 @@ VictoriaMetrics offers open-source community versions. In addition, the Enterpri
 - **Downsampling**: Reducing storage costs and increasing performance for queries over historical data.
 - **Stable releases** with long-term support lines ([LTS](https://docs.victoriametrics.com/lts-releases/)).
 - **Comprehensive support**: First-class consulting, feature requests and technical support provided by the core VictoriaMetrics dev team.
-- Many others you can read at [the Enterprise page](https://docs.victoriametrics.com/enterprise/).
+- Many other features, which you can read about on [the Enterprise page](https://docs.victoriametrics.com/enterprise/).
 
 [Contact us](mailto:info@victoriametrics.com) if you need enterprise support for VictoriaMetrics. Or you can request a free trial license [here](https://victoriametrics.com/products/enterprise/trial/), downloaded Enterprise binaries are available at [Github Releases](https://github.com/VictoriaMetrics/VictoriaMetrics/releases/latest).
 
@@ -70,7 +70,7 @@ VictoriaMetrics is optimized for timeseries data, even when old time series are 
 
 Some good benchmarks VictoriaMetrics achieved:
 
-* **High cardinality**: handling millions of unique timeseries with 10x less RAM than InfluxDB[^a-insert-benchmark], up to 7x less RAM than Prometheus, Thanos or Cortex[^a-vm-prom].
+* **Minimal memory footprint**: handling millions of unique timeseries with 10x less RAM than InfluxDB[^a-insert-benchmark], up to 7x less RAM than Prometheus, Thanos or Cortex[^a-vm-prom].
 * **Highly scalable and performance** for data ingestion[^a-high-cardinality] and querying[^a-size-matter]: 20x outperforms InfluxDB and TimescaleDB[^a-insert-benchmark].
 * **High data compression**: 70x more data points may be stored into limited storage than TimescaleDB[^a-size-matter], 7x less storage space is required than Prometheus[^a-vm-prom], Thanos or Cortex.
 * **Reducing storage costs**: More than 10x than Graphite in [Grammarly case study](https://docs.victoriametrics.com/casestudies/#grammarly).
