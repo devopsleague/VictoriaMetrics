@@ -4,17 +4,18 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"github.com/VictoriaMetrics/VictoriaMetrics/app/vmctl/barpool"
 	"log"
 	"net/http"
 	"os"
 	"testing"
 	"time"
 
+	"github.com/VictoriaMetrics/VictoriaMetrics/app/vmctl/barpool"
+
 	"github.com/VictoriaMetrics/VictoriaMetrics/app/vmctl/backoff"
 	"github.com/VictoriaMetrics/VictoriaMetrics/app/vmctl/native"
 	"github.com/VictoriaMetrics/VictoriaMetrics/app/vmctl/stepper"
-	remote_read_integration "github.com/VictoriaMetrics/VictoriaMetrics/app/vmctl/testdata/servers_integration_test"
+	remotereadintegration "github.com/VictoriaMetrics/VictoriaMetrics/app/vmctl/testdata/servers_integration_test"
 	"github.com/VictoriaMetrics/VictoriaMetrics/app/vmctl/vm"
 	"github.com/VictoriaMetrics/VictoriaMetrics/app/vmselect/promql"
 	"github.com/VictoriaMetrics/VictoriaMetrics/app/vmstorage"
@@ -83,7 +84,7 @@ func Test_vmNativeProcessor_run(t *testing.T) {
 			chunk:        stepper.StepMinute,
 			fields: fields{
 				filter:       native.Filter{},
-				backoff:      backoff.New(),
+				backoff:      backoff.New(10, 1.8, time.Second*2),
 				rateLimit:    0,
 				interCluster: false,
 				cc:           1,
@@ -94,7 +95,7 @@ func Test_vmNativeProcessor_run(t *testing.T) {
 				ctx:    context.Background(),
 				silent: true,
 			},
-			vmSeries: remote_read_integration.GenerateVNSeries,
+			vmSeries: remotereadintegration.GenerateVNSeries,
 			expectedSeries: []vm.TimeSeries{
 				{
 					Name:       "vm_metric_1",
@@ -126,7 +127,7 @@ func Test_vmNativeProcessor_run(t *testing.T) {
 			chunk:        stepper.StepMonth,
 			fields: fields{
 				filter:       native.Filter{},
-				backoff:      backoff.New(),
+				backoff:      backoff.New(10, 1.8, time.Second*2),
 				rateLimit:    0,
 				interCluster: false,
 				cc:           1,
@@ -137,7 +138,7 @@ func Test_vmNativeProcessor_run(t *testing.T) {
 				ctx:    context.Background(),
 				silent: true,
 			},
-			vmSeries: remote_read_integration.GenerateVNSeries,
+			vmSeries: remotereadintegration.GenerateVNSeries,
 			expectedSeries: []vm.TimeSeries{
 				{
 					Name:       "vm_metric_1",
@@ -181,8 +182,8 @@ func Test_vmNativeProcessor_run(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			src := remote_read_integration.NewRemoteWriteServer(t)
-			dst := remote_read_integration.NewRemoteWriteServer(t)
+			src := remotereadintegration.NewRemoteWriteServer(t)
+			dst := remotereadintegration.NewRemoteWriteServer(t)
 
 			defer func() {
 				src.Close()
