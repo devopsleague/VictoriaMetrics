@@ -27,8 +27,44 @@ export const useFetchLogHits = (server: string, query: string) => {
         step: `${step}ms`,
         start: start.toISOString(),
         end: end.toISOString(),
+        field: "_stream" // In the future, this field can be made configurable
+
       })
     };
+  };
+
+  const accumulateHits = (resultHit: LogHits, hit: LogHits) => {
+    resultHit.total = (resultHit.total || 0) + (hit.total || 0);
+    hit.timestamps.forEach((timestamp, i) => {
+      const index = resultHit.timestamps.findIndex(t => t === timestamp);
+      if (index === -1) {
+        resultHit.timestamps.push(timestamp);
+        resultHit.values.push(hit.values[i]);
+      } else {
+        resultHit.values[index] += hit.values[i];
+      }
+    });
+    return resultHit;
+  };
+
+  const getHitsWithTop = (hits: LogHits[]) => {
+    const topN = 5;
+    const defaultHit = { fields: {}, timestamps: [], values: [], total: 0 };
+
+    const hitsByTotal = hits.sort((a, b) => (b.total || 0) - (a.total || 0));
+    const result = [];
+
+    const otherHits: LogHits = hitsByTotal.slice(topN).reduce(accumulateHits, defaultHit);
+    if (otherHits.total) {
+      result.push(otherHits);
+    }
+
+    const topHits: LogHits[] = hitsByTotal.slice(0, topN);
+    if (topHits.length) {
+      result.push(...topHits);
+    }
+
+    return result;
   };
 
   const fetchLogHits = useCallback(async (period: TimeParams) => {
@@ -59,7 +95,7 @@ export const useFetchLogHits = (server: string, query: string) => {
         return Promise.reject(new Error(error));
       }
 
-      setLogHits(hits);
+      setLogHits(getHitsWithTop(hits));
     } catch (e) {
       if (e instanceof Error && e.name !== "AbortError") {
         setError(String(e));
