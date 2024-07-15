@@ -9,7 +9,11 @@
 [![Build Status](https://github.com/VictoriaMetrics/VictoriaMetrics/workflows/main/badge.svg)](https://github.com/VictoriaMetrics/VictoriaMetrics/actions)
 [![codecov](https://codecov.io/gh/VictoriaMetrics/VictoriaMetrics/branch/master/graph/badge.svg)](https://codecov.io/gh/VictoriaMetrics/VictoriaMetrics)
 
-<img src="docs/logo.webp" width="300" alt="VictoriaMetrics logo">
+<picture>
+  <source srcset="docs/logo_white.webp" media="(prefers-color-scheme: dark)">
+  <source srcset="docs/logo.webp" media="(prefers-color-scheme: light)">
+  <img src="docs/logo.webp" width="300" alt="VictoriaMetrics logo">
+</picture>
 
 VictoriaMetrics is a fast, cost-effective and scalable monitoring solution and time series database.
 See [case studies for VictoriaMetrics](https://docs.victoriametrics.com/casestudies/).
@@ -318,8 +322,8 @@ This allows Grafana to use a more efficient API to get label values.
 Then build graphs and dashboards for the created datasource using [PromQL](https://prometheus.io/docs/prometheus/latest/querying/basics/)
 or [MetricsQL](https://docs.victoriametrics.com/metricsql/).
 
-Alternatively, use VictoriaMetrics [datasource plugin](https://github.com/VictoriaMetrics/grafana-datasource) with support of extra features. 
-See more in [description](https://github.com/VictoriaMetrics/grafana-datasource#victoriametrics-data-source-for-grafana).
+Alternatively, use VictoriaMetrics [datasource plugin](https://github.com/VictoriaMetrics/victoriametrics-datasource) with support of extra features. 
+See more in [description](https://docs.victoriametrics.com/victoriametrics-datasource/).
 
 Creating a datasource may require [specific permissions](https://grafana.com/docs/grafana/latest/administration/data-source-management/).
 If you don't see an option to create a data source - try contacting system administrator.
@@ -2669,6 +2673,9 @@ used or posted in other docs, GitHub issues, stackoverlow answers, etc.
 
 Please, keep image size and number of images per single page low. Keep the docs page as lightweight as possible.
 
+Image files must be placed in the same folder as the doc itself and they must have the same prefix as the doc filename.
+For example, all the images for `docs/foo/bar.md` should have filenames starting from `docs/foo/bar`.
+
 If the page needs to have many images, consider using WEB-optimized image format [webp](https://developers.google.com/speed/webp).
 When adding a new doc with many images use `webp` format right away. Or use a Makefile command below to
 convert already existing images at `docs` folder automatically to `web` format:
@@ -3088,7 +3095,7 @@ Pass `-help` to VictoriaMetrics in order to see the list of supported command-li
   -search.maxLabelsAPIDuration duration
      The maximum duration for /api/v1/labels, /api/v1/label/.../values and /api/v1/series requests. See also -search.maxLabelsAPISeries and -search.ignoreExtraFiltersAtLabelsAPI (default 5s)
   -search.maxLabelsAPISeries int
-     The maximum number of time series, which could be scanned when searching for the the matching time series at /api/v1/labels and /api/v1/label/.../values. This option allows limiting memory usage and CPU usage. See also -search.maxLabelsAPIDuration, -search.maxTagKeys, -search.maxTagValues and -search.ignoreExtraFiltersAtLabelsAPI (default 1000000)
+     The maximum number of time series, which could be scanned when searching for the matching time series at /api/v1/labels and /api/v1/label/.../values. This option allows limiting memory usage and CPU usage. See also -search.maxLabelsAPIDuration, -search.maxTagKeys, -search.maxTagValues and -search.ignoreExtraFiltersAtLabelsAPI (default 1000000)
   -search.maxLookback duration
      Synonym to -search.lookback-delta from Prometheus. The value is dynamically detected from interval between time series datapoints if not set. It can be overridden on per-query basis via max_lookback arg. See also '-search.maxStalenessInterval' flag, which has the same meaning due to historical reasons
   -search.maxMemoryPerQuery size

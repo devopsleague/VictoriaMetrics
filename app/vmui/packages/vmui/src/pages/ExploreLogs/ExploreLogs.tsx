@@ -50,9 +50,8 @@ const ExploreLogs: FC = () => {
 
     const newPeriod = getPeriod();
     setPeriod(newPeriod);
-    fetchLogs(newPeriod).then(() => {
-      fetchLogHits(newPeriod);
-    }).catch(e => e);
+    fetchLogs(newPeriod);
+    fetchLogHits(newPeriod);
 
     setSearchParamsFromKeys( {
       query,
@@ -107,8 +106,10 @@ const ExploreLogs: FC = () => {
       {error && <Alert variant="error">{error}</Alert>}
       {!error && (
         <ExploreLogsBarChart
+          {...dataLogHits}
           query={query}
           period={period}
+          isLoading={isLoading ? false : dataLogHits.isLoading}
           onApplyFilter={handleApplyFilter}
           {...dataLogHits}
         />

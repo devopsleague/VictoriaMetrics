@@ -133,11 +133,11 @@ outside the current [aggregation interval](#stream-aggregation-config) must be i
 Streaming aggregation results may be incorrect for some time after the restart of [vmagent](https://docs.victoriametrics.com/vmagent/)
 or [single-node VictoriaMetrics](https://docs.victoriametrics.com/) until all the buffered [samples](https://docs.victoriametrics.com/keyconcepts/#raw-samples)
 are sent from remote sources to the `vmagent` or single-node VictoriaMetrics via [supported data ingestion protocols](https://docs.victoriametrics.com/vmagent/#how-to-push-data-to-vmagent).
-In this case it may be a good idea to drop the aggregated data during the first `N` [aggrgation intervals](#stream-aggregation-config)
+In this case it may be a good idea to drop the aggregated data during the first `N` [aggregation intervals](#stream-aggregation-config)
 just after the restart of `vmagent` or single-node VictoriaMetrics. This can be done via the following options:
 
 - The `-streamAggr.ignoreFirstIntervals=N` command-line flag at `vmagent` and single-node VictoriaMetrics. This flag instructs skipping the first `N`
-  [aggregation intervals](#stream-aggregation-config) just after the restart accross all the [configured stream aggregation configs](#configuration).
+  [aggregation intervals](#stream-aggregation-config) just after the restart across all the [configured stream aggregation configs](#configuration).
 
   The `-remoteWrite.streamAggr.ignoreFirstIntervals=N` command-line flag can be specified individually per each `-remoteWrite.url` at [vmagent](https://docs.victoriametrics.com/vmagent/).
 
@@ -562,14 +562,14 @@ Below are aggregation functions that can be put in the `outputs` list at [stream
 * [avg](#avg)
 * [count_samples](#count_samples)
 * [count_series](#count_series)
+* [histogram_bucket](#histogram_bucket)
 * [increase](#increase)
 * [increase_prometheus](#increase_prometheus)
-* [rate_sum](#rate_sum)
-* [rate_avg](#rate_avg)
-* [histogram_bucket](#histogram_bucket)
 * [last](#last)
 * [max](#max)
 * [min](#min)
+* [rate_avg](#rate_avg)
+* [rate_sum](#rate_sum)
 * [stddev](#stddev)
 * [stdvar](#stdvar)
 * [sum_samples](#sum_samples)
@@ -593,7 +593,13 @@ For example, see below time series produced by config with aggregation interval 
 
 <img alt="avg aggregation" src="stream-aggregation-check-avg.webp">
 
-See also [min](#min), [max](#max), [sum_samples](#sum_samples) and [count_samples](#count_samples).
+See also:
+
+- [max](#max)
+- [min](#min)
+- [quantiles](#quantiles)
+- [sum_samples](#sum_samples)
+- [count_samples](#count_samples)
 
 ### count_samples
 
@@ -605,7 +611,10 @@ The results of `count_samples` is equal to the following [MetricsQL](https://doc
 sum(count_over_time(some_metric[interval]))
 ```
 
-See also [count_series](#count_series) and [sum_samples](#sum_samples).
+See also:
+
+- [count_series](#count_series)
+- [sum_samples](#sum_samples)
 
 ### count_series
 
@@ -617,7 +626,33 @@ The results of `count_series` is equal to the following [MetricsQL](https://docs
 count(last_over_time(some_metric[interval]))
 ```
 
-See also [count_samples](#count_samples) and [unique_samples](#unique_samples).
+See also:
+
+- [count_samples](#count_samples)
+- [unique_samples](#unique_samples)
+
+### histogram_bucket
+
+`histogram_bucket` returns [VictoriaMetrics histogram buckets](https://valyala.medium.com/improving-histogram-usability-for-prometheus-and-grafana-bc7e5df0e350)
+  for the input [sample values](https://docs.victoriametrics.com/keyconcepts/#raw-samples) over the given `interval`.
+`histogram_bucket` makes sense only for aggregating [gauges](https://docs.victoriametrics.com/keyconcepts/#gauge).
+See how to aggregate regular histograms [here](#aggregating-histograms).
+
+The results of `histogram_bucket` is equal to the following [MetricsQL](https://docs.victoriametrics.com/metricsql/) query:
+
+Aggregating irregular and sporadic metrics (received from [Lambdas](https://aws.amazon.com/lambda/)
+or [Cloud Functions](https://cloud.google.com/functions)) can be controlled via [staleness_interval](#staleness) option.
+
+```metricsql
+sum(histogram_over_time(some_histogram_bucket[interval])) by (vmrange)
+```
+
+See also:
+
+- [quantiles](#quantiles)
+- [avg](#avg)
+- [max](#max)
+- [min](#min)
 
 ### increase
 
@@ -641,33 +676,12 @@ For example, see below time series produced by config with aggregation interval 
 Aggregating irregular and sporadic metrics (received from [Lambdas](https://aws.amazon.com/lambda/)
 or [Cloud Functions](https://cloud.google.com/functions)) can be controlled via [staleness_interval](#staleness) option.
 
-See also [increase_prometheus](#increase_prometheus) and [total](#total).
+See also:
 
-### rate_sum
-
-`rate_sum` returns the sum of average per-second change of input [time series](https://docs.victoriametrics.com/keyconcepts/#time-series) over the given `interval`.
-`rate_sum` makes sense only for aggregating [counters](https://docs.victoriametrics.com/keyconcepts/#counter).
-
-The results of `rate_sum` are equal to the following [MetricsQL](https://docs.victoriametrics.com/metricsql/) query:
-
-```metricsql
-sum(rate(some_counter[interval]))
-```
-
-See also [rate_avg](#rate_avg) and [total](#total) outputs.
-
-### rate_avg
-
-`rate_avg` returns the average of average per-second of input [time series](https://docs.victoriametrics.com/keyconcepts/#time-series) over the given `interval`.
-`rate_avg` makes sense only for aggregating [counters](https://docs.victoriametrics.com/keyconcepts/#counter).
-
-The results of `rate_avg` are equal to the following [MetricsQL](https://docs.victoriametrics.com/metricsql/) query:
-
-```metricsql
-avg(rate(some_counter[interval]))
-```
-
-See also [rate_sum](#rate_avg) and [total](#total) outputs.
+- [increase_prometheus](#increase_prometheus)
+- [total](#total)
+- [rate_avg](#rate_avg)
+- [rate_sum](#rate_sum)
 
 ### increase_prometheus
 
@@ -686,37 +700,30 @@ If you need taking into account the first sample per time series, then take a lo
 Aggregating irregular and sporadic metrics (received from [Lambdas](https://aws.amazon.com/lambda/)
 or [Cloud Functions](https://cloud.google.com/functions)) can be controlled via [staleness_interval](#staleness) option.
 
-See also [increase](#increase), [total](#total) and [total_prometheus](#total_prometheus).
+See also:
 
-### histogram_bucket
-
-`histogram_bucket` returns [VictoriaMetrics histogram buckets](https://valyala.medium.com/improving-histogram-usability-for-prometheus-and-grafana-bc7e5df0e350)
-  for the input [sample values](https://docs.victoriametrics.com/keyconcepts/#raw-samples) over the given `interval`.
-`histogram_bucket` makes sense only for aggregating [gauges](https://docs.victoriametrics.com/keyconcepts/#gauge).
-See how to aggregate regular histograms [here](#aggregating-histograms).
-
-The results of `histogram_bucket` is equal to the following [MetricsQL](https://docs.victoriametrics.com/metricsql/) query:
-
-Aggregating irregular and sporadic metrics (received from [Lambdas](https://aws.amazon.com/lambda/)
-or [Cloud Functions](https://cloud.google.com/functions)) can be controlled via [staleness_interval](#staleness) option.
-
-```metricsql
-sum(histogram_over_time(some_histogram_bucket[interval])) by (vmrange)
-```
-
-See also [quantiles](#quantiles), [min](#min), [max](#max) and [avg](#avg).
+- [increase](#increase)
+- [rate_avg](#rate_avg)
+- [rate_sum](#rate_sum)
+- [total](#total)
+- [total_prometheus](#total_prometheus)
 
 ### last
 
 `last` returns the last input [sample value](https://docs.victoriametrics.com/keyconcepts/#raw-samples) over the given `interval`.
 
-The results of `last` is roughly equal to the the following [MetricsQL](https://docs.victoriametrics.com/metricsql/) query:
+The results of `last` is roughly equal to the following [MetricsQL](https://docs.victoriametrics.com/metricsql/) query:
 
 ```metricsql
 last_over_time(some_metric[interval])
 ```
 
-See also [min](#min), [max](#max) and [avg](#avg).
+See also:
+
+- [avg](#avg)
+- [max](#max)
+- [min](#min)
+- [quantiles](#quantiles)
 
 ### max
 
@@ -732,7 +739,12 @@ For example, see below time series produced by config with aggregation interval 
 
 <img alt="total aggregation" src="stream-aggregation-check-max.webp">
 
-See also [min](#min) and [avg](#avg).
+See also:
+
+- [min](#min)
+- [avg](#avg)
+- [last](#last)
+- [quantiles](#quantiles)
 
 ### min
 
@@ -748,7 +760,46 @@ For example, see below time series produced by config with aggregation interval 
 
 <img alt="min aggregation" src="stream-aggregation-check-min.webp">
 
-See also [max](#max) and [avg](#avg).
+See also:
+
+- [max](#max)
+- [avg](#avg)
+- [last](#last)
+- [quantiles](#quantiles)
+
+### rate_avg
+
+`rate_avg` returns the average of average per-second increase rates across input [time series](https://docs.victoriametrics.com/keyconcepts/#time-series) over the given `interval`.
+`rate_avg` makes sense only for aggregating [counters](https://docs.victoriametrics.com/keyconcepts/#counter).
+
+The results of `rate_avg` are equal to the following [MetricsQL](https://docs.victoriametrics.com/metricsql/) query:
+
+```metricsql
+avg(rate(some_counter[interval]))
+```
+
+See also:
+
+- [rate_sum](#rate_sum)
+- [increase](#increase)
+- [total](#total)
+
+### rate_sum
+
+`rate_sum` returns the sum of average per-second increase rates across input [time series](https://docs.victoriametrics.com/keyconcepts/#time-series) over the given `interval`.
+`rate_sum` makes sense only for aggregating [counters](https://docs.victoriametrics.com/keyconcepts/#counter).
+
+The results of `rate_sum` are equal to the following [MetricsQL](https://docs.victoriametrics.com/metricsql/) query:
+
+```metricsql
+sum(rate(some_counter[interval]))
+```
+
+See also:
+
+- [rate_avg](#rate_avg)
+- [increase](#increase)
+- [total](#total)
 
 ### stddev
 
@@ -762,7 +813,11 @@ The results of `stddev` is roughly equal to the following [MetricsQL](https://do
 histogram_stddev(sum(histogram_over_time(some_metric[interval])) by (vmrange))
 ```
 
-See also [stdvar](#stdvar) and [avg](#avg).
+See also:
+
+- [stdvar](#stdvar)
+- [avg](#avg)
+- [quantiles](#quantiles)
 
 ### stdvar
 
@@ -780,7 +835,11 @@ For example, see below time series produced by config with aggregation interval 
 
 <img alt="stdvar aggregation" src="stream-aggregation-check-stdvar.webp">
 
-See also [stddev](#stddev) and [avg](#avg).
+See also:
+
+- [stddev](#stddev)
+- [avg](#avg)
+- [quantiles](#quantiles)
 
 ### sum_samples
 
@@ -797,14 +856,17 @@ For example, see below time series produced by config with aggregation interval 
 
 <img alt="sum_samples aggregation" src="stream-aggregation-check-sum-samples.webp">
 
-See also [count_samples](#count_samples) and [count_series](#count_series).
+See also:
+
+- [count_samples](#count_samples)
+- [count_series](#count_series)
 
 ### total
 
 `total` generates output [counter](https://docs.victoriametrics.com/keyconcepts/#counter) by summing the input counters over the given `interval`.
 `total` makes sense only for aggregating [counters](https://docs.victoriametrics.com/keyconcepts/#counter).
 
-The results of `total` is roughly equal to the the following [MetricsQL](https://docs.victoriametrics.com/metricsql/) query:
+The results of `total` is roughly equal to the following [MetricsQL](https://docs.victoriametrics.com/metricsql/) query:
 
 ```metricsql
 sum(running_sum(increase_pure(some_counter)))
@@ -834,14 +896,20 @@ This changes pod name label, but the `total` accounts for such a scenario and do
 Aggregating irregular and sporadic metrics (received from [Lambdas](https://aws.amazon.com/lambda/)
 or [Cloud Functions](https://cloud.google.com/functions)) can be controlled via [staleness_interval](#staleness) option.
 
-See also [total_prometheus](#total_prometheus), [increase](#increase) and [increase_prometheus](#increase_prometheus).
+See also:
+
+- [total_prometheus](#total_prometheus)
+- [increase](#increase)
+- [increase_prometheus](#increase_prometheus)
+- [rate_sum](#rate_sum)
+- [rate_avg](#rate_avg)
 
 ### total_prometheus
 
 `total_prometheus` generates output [counter](https://docs.victoriametrics.com/keyconcepts/#counter) by summing the input counters over the given `interval`.
 `total_prometheus` makes sense only for aggregating [counters](https://docs.victoriametrics.com/keyconcepts/#counter).
 
-The results of `total_prometheus` is roughly equal to the the following [MetricsQL](https://docs.victoriametrics.com/metricsql/) query:
+The results of `total_prometheus` is roughly equal to the following [MetricsQL](https://docs.victoriametrics.com/metricsql/) query:
 
 ```metricsql
 sum(running_sum(increase_prometheus(some_counter)))
@@ -857,7 +925,13 @@ The counters are most often reset when the application is restarted.
 Aggregating irregular and sporadic metrics (received from [Lambdas](https://aws.amazon.com/lambda/)
 or [Cloud Functions](https://cloud.google.com/functions)) can be controlled via [staleness_interval](#staleness) option.
 
-See also [total](#total), [increase](#increase) and [increase_prometheus](#increase_prometheus).
+See also:
+
+- [total](#total)
+- [increase](#increase)
+- [increase_prometheus](#increase_prometheus)
+- [rate_sum](#rate_sum)
+- [rate_avg](#rate_avg)
 
 ### unique_samples
 
@@ -870,7 +944,10 @@ The results of `unique_samples` is equal to the following [MetricsQL](https://do
 count(count_values_over_time(some_metric[interval]))
 ```
 
-See also [sum_samples](#sum_samples) and [count_series](#count_series).
+See also:
+
+- [sum_samples](#sum_samples)
+- [count_series](#count_series)
 
 ### quantiles
 
@@ -885,7 +962,12 @@ The results of `quantiles(phi1, ..., phiN)` is equal to the following [MetricsQL
 histogram_quantiles("quantile", phi1, ..., phiN, sum(histogram_over_time(some_metric[interval])) by (vmrange))
 ```
 
-See also [histogram_bucket](#histogram_bucket), [min](#min), [max](#max) and [avg](#avg).
+See also:
+
+- [histogram_bucket](#histogram_bucket)
+- [avg](#avg)
+- [max](#max)
+- [min](#min)
 
 
 ## Aggregating by labels
@@ -962,11 +1044,13 @@ specified individually per each `-remoteWrite.url`:
 
   # staleness_interval is an optional interval for resetting the per-series state if no new samples
   # are received during this interval for the following outputs:
-  # - total
-  # - total_prometheus
+  # - histogram_bucket
   # - increase
   # - increase_prometheus
-  # - histogram_bucket
+  # - rate_avg
+  # - rate_sum
+  # - total
+  # - total_prometheus
   # See https://docs.victoriametrics.com/stream-aggregation/#staleness for more details.
   #
   # staleness_interval: 2m
@@ -995,7 +1079,7 @@ specified individually per each `-remoteWrite.url`:
   #
   # by: [job, vmrange]
 
-  # outputs is the list of aggregations to perform on the input data.
+  # outputs is the list of unique aggregations to perform on the input data.
   # See https://docs.victoriametrics.com/stream-aggregation/#aggregation-outputs
   #
   outputs: [total]
@@ -1071,13 +1155,13 @@ support the following approaches for hot reloading stream aggregation configs fr
 
 The following outputs track the last seen per-series values in order to properly calculate output values:
 
-- [rate_sum](#rate_sum)
-- [rate_avg](#rate_avg)
-- [total](#total)
-- [total_prometheus](#total_prometheus)
+- [histogram_bucket](#histogram_bucket)
 - [increase](#increase)
 - [increase_prometheus](#increase_prometheus)
-- [histogram_bucket](#histogram_bucket)
+- [rate_avg](#rate_avg)
+- [rate_sum](#rate_sum)
+- [total](#total)
+- [total_prometheus](#total_prometheus)
 
 The last seen per-series value is dropped if no new samples are received for the given time series during two consecutive aggregation
 intervals specified in [stream aggregation config](#stream-aggregation-config) via `interval` option.

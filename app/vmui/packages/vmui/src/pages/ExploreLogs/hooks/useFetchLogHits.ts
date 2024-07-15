@@ -7,7 +7,7 @@ import { LOGS_BARS_VIEW } from "../../../constants/logs";
 
 export const useFetchLogHits = (server: string, query: string) => {
   const [logHits, setLogHits] = useState<LogHits[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState<{[key: number]: boolean;}>([]);
   const [error, setError] = useState<ErrorTypes | string>();
   const abortControllerRef = useRef(new AbortController());
 
@@ -72,7 +72,8 @@ export const useFetchLogHits = (server: string, query: string) => {
     abortControllerRef.current = new AbortController();
     const { signal } = abortControllerRef.current;
 
-    setIsLoading(true);
+    const id = Date.now();
+    setIsLoading(prev => ({ ...prev, [id]: true }));
     setError(undefined);
 
     try {
@@ -83,8 +84,8 @@ export const useFetchLogHits = (server: string, query: string) => {
         const text = await response.text();
         setError(text);
         setLogHits([]);
-        setIsLoading(false);
-        return Promise.reject(new Error(text));
+        setIsLoading(prev => ({ ...prev, [id]: false }));
+        return;
       }
 
       const data = await response.json();
@@ -92,25 +93,22 @@ export const useFetchLogHits = (server: string, query: string) => {
       if (!hits) {
         const error = "Error: No 'hits' field in response";
         setError(error);
-        return Promise.reject(new Error(error));
       }
 
-      setLogHits(getHitsWithTop(hits));
+      setLogHits(hits ? getHitsWithTop(hits) : []);
     } catch (e) {
       if (e instanceof Error && e.name !== "AbortError") {
         setError(String(e));
         console.error(e);
         setLogHits([]);
       }
-      return Promise.reject(e);
-    } finally {
-      setIsLoading(false);
     }
+    setIsLoading(prev => ({ ...prev, [id]: false }));
   }, [url, query]);
 
   return {
     logHits,
-    isLoading,
+    isLoading: Object.values(isLoading).some(s => s),
     error,
     fetchLogHits,
   };
