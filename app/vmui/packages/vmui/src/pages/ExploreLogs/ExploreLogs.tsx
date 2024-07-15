@@ -111,7 +111,6 @@ const ExploreLogs: FC = () => {
           period={period}
           isLoading={isLoading ? false : dataLogHits.isLoading}
           onApplyFilter={handleApplyFilter}
-          {...dataLogHits}
         />
       )}
       <ExploreLogsBody
