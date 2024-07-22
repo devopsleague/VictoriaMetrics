@@ -11,11 +11,10 @@ import (
 	"time"
 
 	"github.com/VictoriaMetrics/VictoriaMetrics/app/vmctl/barpool"
+	remotereadintegration "github.com/VictoriaMetrics/VictoriaMetrics/app/vmctl/testdata/servers_integration_test"
 
 	"github.com/VictoriaMetrics/VictoriaMetrics/app/vmctl/backoff"
 	"github.com/VictoriaMetrics/VictoriaMetrics/app/vmctl/native"
-	"github.com/VictoriaMetrics/VictoriaMetrics/app/vmctl/stepper"
-	remotereadintegration "github.com/VictoriaMetrics/VictoriaMetrics/app/vmctl/testdata/servers_integration_test"
 	"github.com/VictoriaMetrics/VictoriaMetrics/app/vmctl/vm"
 	"github.com/VictoriaMetrics/VictoriaMetrics/app/vmselect/promql"
 	"github.com/VictoriaMetrics/VictoriaMetrics/app/vmstorage"
@@ -32,8 +31,8 @@ func TestVMNativeProcessorRun(t *testing.T) {
 	f := func(startStr, endStr string, numOfSeries, numOfSamples int, resultExpected []vm.TimeSeries) {
 		t.Helper()
 
-		src := remote_read_integration.NewRemoteWriteServer(t)
-		dst := remote_read_integration.NewRemoteWriteServer(t)
+		src := remotereadintegration.NewRemoteWriteServer(t)
+		dst := remotereadintegration.NewRemoteWriteServer(t)
 
 		defer func() {
 			src.Close()
@@ -58,7 +57,7 @@ func TestVMNativeProcessorRun(t *testing.T) {
 			TimeEnd:   endStr,
 		}
 
-		rws := remote_read_integration.GenerateVNSeries(start.Unix(), end.Unix(), int64(numOfSeries), int64(numOfSamples))
+		rws := remotereadintegration.GenerateVNSeries(start.Unix(), end.Unix(), int64(numOfSeries), int64(numOfSamples))
 
 		src.Series(rws)
 		dst.ExpectedSeries(resultExpected)
@@ -87,7 +86,7 @@ func TestVMNativeProcessorRun(t *testing.T) {
 			filter:   filter,
 			dst:      dstClient,
 			src:      srcClient,
-			backoff:  backoff.New(),
+			backoff:  backoff.New(10, 1.8, time.Second*2),
 			cc:       1,
 			isNative: true,
 		}
